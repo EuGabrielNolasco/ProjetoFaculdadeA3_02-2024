@@ -15,6 +15,22 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Início') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('funcionarios') }}" :active="request()->routeIs('funcionarios')">
+                        {{ __('Funcionarios') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('cargos') }}" :active="request()->routeIs('cargos')">
+                        {{ __('Cargos') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('turnos') }}" :active="request()->routeIs('turnos')">
+                        {{ __('Turnos') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('relatorios') }}" :active="request()->routeIs('relatorios')">
+                        {{ __('Relatórios') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('departamentos') }}" :active="request()->routeIs('departamentos')">
+                        {{ __('Departamentos') }}
+                    </x-nav-link>
+
                 </div>
             </div>
 
@@ -142,6 +158,27 @@
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Início') }}
             </x-responsive-nav-link>
+            
+            <x-responsive-nav-link href="{{ route('funcionarios') }}" :active="request()->routeIs('funcionarios')">
+                {{ __('Funcionarios') }}
+            </x-responsive-nav-link>
+            
+            <x-responsive-nav-link href="{{ route('cargos') }}" :active="request()->routeIs('cargos')">
+                {{ __('Cargos') }}
+            </x-responsive-nav-link>
+            
+            <x-responsive-nav-link href="{{ route('turnos') }}" :active="request()->routeIs('turnos')">
+                {{ __('Turnos') }}
+            </x-responsive-nav-link>
+            
+            <x-responsive-nav-link href="{{ route('relatorios') }}" :active="request()->routeIs('relatorios')">
+                {{ __('Relatórios') }}
+            </x-responsive-nav-link>
+            
+            <x-responsive-nav-link href="{{ route('departamentos') }}" :active="request()->routeIs('departamentos')">
+                {{ __('Departamentos') }}
+            </x-responsive-nav-link>
+            
         </div>
 
         <!-- Opções de Configurações Responsivas -->
