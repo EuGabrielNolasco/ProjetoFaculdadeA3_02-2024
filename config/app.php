@@ -2,6 +2,10 @@
 
 return [
 
+    'datatable' => [
+        'table'      => 'cell-border row-border '
+    ],
+    
     /*
     |--------------------------------------------------------------------------
     | Application Name

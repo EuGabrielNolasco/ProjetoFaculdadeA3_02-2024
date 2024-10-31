@@ -21,9 +21,12 @@ Route::middleware([
     Route::get('/menu', function () {
         return view('dashboard');
     })->name('dashboard');
+
     Route::get('/pdf', [PdfController::class, 'index'])->name('pdf');
 
     Route::get('/funcionarios', [FuncionariosController::class, 'index'])->name('funcionarios');
+    Route::get('/getData-funcionarios', [FuncionariosController::class, 'getData'])->name('getdata-funcionarios');
+
     Route::get('/relatorios', [RelatoriosController::class, 'index'])->name('relatorios');
     Route::get('/cargos', [CargosController::class, 'index'])->name('cargos');
     Route::get('/turnos', [TurnosController::class, 'index'])->name('turnos');

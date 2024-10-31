@@ -13,8 +13,11 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                'cor-padrao': '#3b66b5',
+            },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter var', ...defaultTheme.fontFamily.sans],
             },
         },
     },
