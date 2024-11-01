@@ -18,6 +18,13 @@ class model_Employees extends Model
             'a.contact as contato',
             'b.name as departamento',
             'b.description as descricao'
-        ])->leftJoin('departments as b','b.id','=','a.department_id');
+        ])->leftJoin('departments as b', 'b.id', '=', 'a.department_id')->when($search, function ($query, $search) {
+            return $query->where(function ($query) use ($search) {
+                $query->where('a.name', 'like', "%{$search}%")
+                    ->orWhere('a.contact', 'like', "%{$search}%")
+                    ->orWhere('b.description', 'like', "%{$search}%")
+                    ->orWhere('b.name', 'like', "%{$search}%");
+            });
+        });
     }
 }

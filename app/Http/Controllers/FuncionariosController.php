@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use PhpParser\Node\Expr\Cast\Object_;
 
 class FuncionariosController extends Controller
 {
@@ -17,7 +16,7 @@ class FuncionariosController extends Controller
         return view('menus.funcionarios.index');
     }
 
-    public function getData(request $request): Object
+    public function getData(Request $request): Object
     {
         $totalData = 0;
         $totalFiltered = 0;
@@ -31,16 +30,10 @@ class FuncionariosController extends Controller
             $query = model_Employees::query();
 
             // Verifica se o valor de pesquisa é uma data válida
-            if ($search && validateDate($search, 'd/m/Y')) {
-                try {
-                    $date = Carbon::createFromFormat('d/m/Y', $search)->format('Y-m-d');
-                    $query = model_Employees::obterFuncionarios($date);
-                } catch (\Throwable $e) {
-                    $query = model_Employees::obterFuncionarios($search);
-                }
-            } else {
-                $query = model_Employees::obterFuncionarios($search);
-            }
+
+            $query = model_Employees::obterFuncionarios($search);
+
+
 
             // Contagem total de registros
             $totalData = $query->count();
@@ -62,7 +55,7 @@ class FuncionariosController extends Controller
             ];
 
             // Ordenação dos dados
-            $orderColumnIndex = $request->input('order.0.column') == 0 ? 1 : $request->input('order.0.column');
+            $orderColumnIndex = $request->input('order.0.column') == 0 ? 0 : $request->input('order.0.column');
             $orderColumn = $columns[$orderColumnIndex];
             $orderDir = $request->input('order.0.dir', 'asc') === 'desc' ? 'asc' : 'desc';
 
