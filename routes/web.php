@@ -42,15 +42,15 @@ Route::middleware([
     // CARGOS
         Route::get('/cargos', [CargosController::class, 'index'])->name('cargos');
         Route::get('/cargos/data', [CargosController::class, 'getData'])->name('getdata-cargos');
-        // Rota para exibir a view de criação de funcionários
+        // Rota para exibir a view de criação de cargos
         Route::get('/cargos/create', [CargosController::class, 'create'])->name('cargos.create');
         // Rota para editar um funcionário existente
         Route::get('/cargos/{id}/edit', [CargosController::class, 'edit'])->name('cargos.edit');
-        // Rota para armazenar novos funcionários
+        // Rota para armazenar novos cargos
         Route::post('/cargos', [CargosController::class, 'store'])->name('cargos.store');
-        // Rota para atualizar funcionários existentes
+        // Rota para atualizar cargos existentes
         Route::put('/cargos/{id}', [CargosController::class, 'update'])->name('cargos.update');
-        // Rota para excluir funcionários
+        // Rota para excluir cargos
         Route::delete('/cargos/{id}', [CargosController::class, 'destroy'])->name('cargos.destroy');
 
     // TURNOS
@@ -60,6 +60,16 @@ Route::middleware([
     // DEPARTAMENTOS
         Route::get('/departamentos', [DepartamentosController::class, 'index'])->name('departamentos');
         Route::get('/departamentos/data', [DepartamentosController::class, 'getData'])->name('getdata-departamentos');
+        // Rota para exibir a view de criação de departamentos
+        Route::get('/departamentos/create', [DepartamentosController::class, 'create'])->name('departamentos.create');
+        // Rota para editar um funcionário existente
+        Route::get('/departamentos/{id}/edit', [DepartamentosController::class, 'edit'])->name('departamentos.edit');
+        // Rota para armazenar novos departamentos
+        Route::post('/departamentos', [DepartamentosController::class, 'store'])->name('departamentos.store');
+        // Rota para atualizar departamentos existentes
+        Route::put('/departamentos/{id}', [DepartamentosController::class, 'update'])->name('departamentos.update');
+        // Rota para excluir departamentos
+        Route::delete('/departamentos/{id}', [DepartamentosController::class, 'destroy'])->name('departamentos.destroy');
 
     // ESCALAS
         Route::get('/escalas', [EscalasController::class, 'index'])->name('escalas');

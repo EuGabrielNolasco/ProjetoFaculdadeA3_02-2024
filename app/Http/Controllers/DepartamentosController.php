@@ -6,6 +6,7 @@ use App\Models\Model_departments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class DepartamentosController extends Controller
@@ -14,7 +15,6 @@ class DepartamentosController extends Controller
     {
         return view('menus.departamentos.index');
     }
-
     public function getData(Request $request): Object
     {
         $totalData = 0;
@@ -64,7 +64,20 @@ class DepartamentosController extends Controller
                 return [
                     'id' => $dado->id,
                     'name' => $dado->name,
-                    'description' => $dado->description
+                    'description' => $dado->description,
+                    'acoes' => '
+                        <a href="' . route('departamentos.edit', $dado->id) . '" class="text-blue-500 hover:text-blue-700" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="' . route('departamentos.destroy', $dado->id) . '" method="POST" style="display: inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="text-red-500 hover:text-red-700" onclick="return confirm(\'Tem certeza que deseja excluir?\')" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    ',
+
                 ];
             });
 
@@ -83,5 +96,103 @@ class DepartamentosController extends Controller
             'recordsFiltered' => $totalFiltered,
             'data' => $data->toArray(),
         ]);
+    }
+    public function create()
+    {
+        return view('menus.departamentos.create');
+    }
+    public function store(Request $request)
+    {
+        // Validação dos dados do formulário
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            Log::error('Erro de validação: ', $validator->errors()->toArray());
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+        DB::beginTransaction();
+        try {
+            // Cria o novo departamento
+            Model_departments::create([
+                'name' => $request->input('name'),
+                'description' => $request->input('description')
+            ]);
+
+            Log::info('Departamento inserido com sucesso!');
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            log::error('Erro ao criar departamento: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Erro ao criar o departamento: ' . $e->getMessage());
+        }
+        return view('menus.departamentos.index');
+    }
+    public function destroy($id)
+    {
+        DB::beginTransaction();
+        try {
+            // Encontra o Departamento pelo ID e o exclui
+            $departamentos = Model_departments::findOrFail($id);
+            $departamentos->delete();
+
+            DB::commit();
+
+            // Retorna uma resposta de sucesso
+            return redirect()->route('departamentos.index')->with('success', 'Departamento excluído com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erro ao excluir Departamento: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Erro ao excluir o Departamento.');
+        }
+    }
+    public function edit($id)
+    {
+        // Busca o departamento pelo ID
+        $departamentos = Model_departments::findOrFail($id);
+
+        return view('menus.departamentos.edit', compact('departamentos'));
+    }
+    public function update(Request $request, $id)
+    {
+        // Validação dos dados do formulário
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        DB::beginTransaction();
+        try {
+            // Busca o departamento pelo ID e atualiza os dados
+            $departamentos = Model_departments::findOrFail($id);
+            $departamentos->update([
+                'name' => $request->input('name'),
+                'description' => $request->input('description')
+            ]);
+
+            DB::commit();
+
+            // Redireciona com uma mensagem de sucesso
+            return redirect()->route('departamentos')->with('success', 'Departamento atualizado com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            log::error('Erro ao  atualizar Departamento: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Erro ao atualizar o Departamento.');
+        }
     }
 }

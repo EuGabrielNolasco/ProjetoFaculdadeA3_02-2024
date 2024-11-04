@@ -10,6 +10,12 @@
 
 
     <div class=" mx-auto sm:px-6 lg:px-8 mt-5 rounded-lg">
+        <!-- Botão de criar -->
+        <div class="flex justify-end mb-4">
+            <a href="{{ route('departamentos.create') }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                Criar Novo Departamentos
+            </a>
+        </div>
         <div class=" overflow-hidden">
             <table class="{{ $table }} table-css tableDepartamentos" style="width: 100%">
                 <thead class="table-head-css">
@@ -46,6 +52,12 @@
                     "data": "description",
                     "title": "Descrição",
                     "className": "text-left"
+                },
+                {
+                    "data": "acoes",
+                    "title": "Ações",
+                    "className": "text-center",
+                    orderable: false
                 }
 
             ],

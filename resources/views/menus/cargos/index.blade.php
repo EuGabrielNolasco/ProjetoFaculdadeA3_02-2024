@@ -57,7 +57,8 @@
                 {
                     "data": "acoes",
                     "title": "Ações",
-                    "className": "text-center"
+                    "className": "text-center",
+                    orderable: false
                 }
 
             ],

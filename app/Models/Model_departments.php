@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Model_departments extends Model
 {
     protected $table = 'departments';
-    protected $fillable = [];
+    protected $fillable = ['name','description'];
     
     public static function obterDepartments(?string $search = ''):Builder
     {
