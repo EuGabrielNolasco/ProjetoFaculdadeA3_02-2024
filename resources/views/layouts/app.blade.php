@@ -22,6 +22,7 @@
     <!-- Scripts Locais -->
     @include('components.datatables')
     <link rel="stylesheet" href="{{ asset('css/datatable.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMHAk4xv2WocWf3cLzZl1A3Ao+42V9tH6nG07s" crossorigin="anonymous">
 
 </head>
 

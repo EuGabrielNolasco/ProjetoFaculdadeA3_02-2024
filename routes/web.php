@@ -28,14 +28,33 @@ Route::middleware([
     Route::get('/funcionarios', [FuncionariosController::class, 'index'])->name('funcionarios');
     Route::get('/getData-funcionarios', [FuncionariosController::class, 'getData'])->name('getdata-funcionarios');
 
+    // Rota para exibir a view de criação de funcionários
+    Route::get('/funcionarios/create', [FuncionariosController::class, 'create'])->name('funcionarios.create');
+
+    // Rota para editar um funcionário existente
+    Route::get('/funcionarios/{id}/edit', [FuncionariosController::class, 'edit'])->name('funcionarios.edit');
+
+    // Rota para armazenar novos funcionários
+    Route::post('/funcionarios', [FuncionariosController::class, 'store'])->name('funcionarios.store');
+
+    // Rota para atualizar funcionários existentes
+    Route::put('/funcionarios/{id}', [FuncionariosController::class, 'update'])->name('funcionarios.update');
+
+    // Rota para excluir funcionários
+    Route::delete('/funcionarios/{id}', [FuncionariosController::class, 'destroy'])->name('funcionarios.destroy');
+
+    // CARGOS
     Route::get('/cargos', [CargosController::class, 'index'])->name('cargos');
-    Route::get('/getData-cargos', [CargosController::class, 'getData'])->name('getdata-cargos');
+    Route::get('/cargos/data', [CargosController::class, 'getData'])->name('getdata-cargos');
 
+    // TURNOS
     Route::get('/turnos', [TurnosController::class, 'index'])->name('turnos');
-    Route::get('/getData-turnos', [TurnosController::class, 'getData'])->name('getdata-turnos');
+    Route::get('/turnos/data', [TurnosController::class, 'getData'])->name('getdata-turnos');
 
+    // DEPARTAMENTOS
     Route::get('/departamentos', [DepartamentosController::class, 'index'])->name('departamentos');
-    Route::get('/getData-departamentos', [DepartamentosController::class, 'getData'])->name('getdata-departamentos');
+    Route::get('/departamentos/data', [DepartamentosController::class, 'getData'])->name('getdata-departamentos');
 
+    // ESCALAS
     Route::get('/escalas', [EscalasController::class, 'index'])->name('escalas');
 });

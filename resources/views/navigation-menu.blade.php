@@ -173,9 +173,9 @@
                 {{ __('Início') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="{{ route('funcionarios') }}" :active="request()->routeIs('funcionarios')">
+            <x-responsive-nav-link href="{{ route('funcionarios') }}" :active="request()->routeIs('funcionarios', 'funcionarios.create', 'funcionarios.edit')">
                 {{ __('Funcionarios') }}
-            </x-responsive-nav-link>
+            </x-responsive-nav-link>            
 
             <x-responsive-nav-link href="{{ route('cargos') }}" :active="request()->routeIs('cargos')">
                 {{ __('Cargos') }}
