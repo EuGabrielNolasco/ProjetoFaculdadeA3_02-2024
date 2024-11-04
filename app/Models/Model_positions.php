@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Model_positions extends Model
 {
     protected $table = 'positions';
-    protected $fillable = [];
+    protected $fillable = ['name','responsibilities'];
     
     public static function obterPositions(?string $search = ''):Builder
     {
