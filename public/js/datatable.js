@@ -64,7 +64,27 @@ function initializeDataTable(descricaoNotFound, idDatatable, url, columns, butto
 }
 
 function applyTableStyles(idDatatable) {
-    $('.' + idDatatable + ' td').addClass('bg-white text-gray-900 ');
-    $('.' + idDatatable + ' tfoot').addClass('bg-gray-300 text-gray-800');
-    $('.' + idDatatable + ' thead').addClass('bg-gray-800 text-white mt-4');
+    $('.' + idDatatable + ' td').css({
+        'font-size': '1rem', // Define o tamanho da fonte em 'rem' para escalabilidade
+        'background-color': '#ffffff',
+        'color': '#1f2937' // Define o texto como cinza escuro
+    }).addClass('text-lg bg-white text-gray-900');
+
+    $('.' + idDatatable + ' th').css({
+        'font-size': '1rem',
+            'color': '#ffff',
+    }).addClass('text-lg bg-gray-700 text-gray-100');
+
+    $('.' + idDatatable + ' tfoot').css({
+        'font-size': '1rem',
+        'background-color': '#d1d5db',
+        'color': '#1f2937'
+    }).addClass('text-lg bg-gray-700 text-gray-800');
+
+    $('.' + idDatatable + ' thead').css({
+        'font-size': '1rem',
+        'background-color': '#1f2937',
+        'color': '#ffffff',
+        'margin-top': '1rem'
+    }).addClass(' text-lg bg-gray-700 text-gray-100');
 }

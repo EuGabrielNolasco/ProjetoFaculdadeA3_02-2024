@@ -56,6 +56,16 @@ Route::middleware([
     // TURNOS
         Route::get('/turnos', [TurnosController::class, 'index'])->name('turnos');
         Route::get('/turnos/data', [TurnosController::class, 'getData'])->name('getdata-turnos');
+        // Rota para exibir a view de criação de turnos
+        Route::get('/turnos/create', [TurnosController::class, 'create'])->name('turnos.create');
+        // Rota para editar um funcionário existente
+        Route::get('/turnos/{id}/edit', [TurnosController::class, 'edit'])->name('turnos.edit');
+        // Rota para armazenar novos turnos
+        Route::post('/turnos', [TurnosController::class, 'store'])->name('turnos.store');
+        // Rota para atualizar turnos existentes
+        Route::put('/turnos/{id}', [TurnosController::class, 'update'])->name('turnos.update');
+        // Rota para excluir turnos
+        Route::delete('/turnos/{id}', [TurnosController::class, 'destroy'])->name('turnos.destroy');
 
     // DEPARTAMENTOS
         Route::get('/departamentos', [DepartamentosController::class, 'index'])->name('departamentos');

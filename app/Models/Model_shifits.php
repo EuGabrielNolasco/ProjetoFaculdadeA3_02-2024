@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Model_shifits extends Model
 {
     protected $table = 'shifts';
-    protected $fillable = [];
+    protected $fillable = ['name','end_time','start_time'];
     
     public static function obterShifts(?string $search = ''):Builder
     {
