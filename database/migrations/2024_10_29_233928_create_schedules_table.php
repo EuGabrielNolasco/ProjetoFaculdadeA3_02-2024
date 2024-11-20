@@ -15,10 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('employee_id')->index();
             $table->unsignedBigInteger('shift_id')->index();
-            $table->date('date'); // Data da escala
-            $table->string('function')->nullable(); // Função específica para a escala
-            $table->text('notes')->nullable();
+            $table->string('period_type'); // 'weekly', 'biweekly', 'monthly', or 'quarterly'
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->json('days'); // JSON array with days assigned in the schedule
             $table->timestamps();
+
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('shift_id')->references('id')->on('shifts')->onDelete('cascade');
         });
     }
 

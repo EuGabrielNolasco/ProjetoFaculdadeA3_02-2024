@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Model_departments;
-use App\Models\model_Employees;
+use App\Models\Model_Employees;
 use App\Models\Model_positions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -29,11 +29,11 @@ class FuncionariosController extends Controller
             $search = $request->input('search.value');
 
             // Inicializa uma query vazia para o modelo `Model_bxemp`
-            $query = model_Employees::query();
+            $query = Model_Employees::query();
 
             // Verifica se o valor de pesquisa é uma data válida
 
-            $query = model_Employees::obterFuncionarios($search);
+            $query = Model_Employees::obterFuncionarios($search);
 
 
 
@@ -135,7 +135,7 @@ class FuncionariosController extends Controller
         DB::beginTransaction();
         try {
             // Cria o novo funcionário
-            model_Employees::create([
+            Model_Employees::create([
                 'name' => $request->input('name'),
                 'contact' => $request->input('contact'),
                 'department_id' => $request->input('department_id'),
@@ -157,7 +157,7 @@ class FuncionariosController extends Controller
         DB::beginTransaction();
         try {
             // Encontra o funcionário pelo ID e o exclui
-            $funcionario = model_Employees::findOrFail($id);
+            $funcionario = Model_Employees::findOrFail($id);
             $funcionario->delete();
 
             DB::commit();
@@ -174,7 +174,7 @@ class FuncionariosController extends Controller
     public function edit($id)
     {
         // Busca o funcionário pelo ID
-        $funcionario = model_Employees::findOrFail($id);
+        $funcionario = Model_Employees::findOrFail($id);
         $departments = Model_departments::all(); // Para exibir os departamentos na view
         $positions = Model_positions::all(); // Para exibir as posições na view
 
@@ -199,7 +199,7 @@ class FuncionariosController extends Controller
         DB::beginTransaction();
         try {
             // B    usca o funcionário pelo ID e atualiza os dados
-            $funcionario = model_Employees::findOrFail($id);
+            $funcionario = Model_Employees::findOrFail($id);
             $funcionario->update([
                 'name' => $request->input('name'),
                 'contact' => $request->input('contact'),

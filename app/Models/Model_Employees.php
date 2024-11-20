@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
-class model_Employees extends Model
+class Model_Employees extends Model
 {
     protected $table = 'employees';
     protected $fillable = [

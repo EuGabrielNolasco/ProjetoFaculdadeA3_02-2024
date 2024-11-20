@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             PositionSeeder::class,
             ShiftSeeder::class,
+            EmployeesSeeder::class,
         ]);
     }
 }
