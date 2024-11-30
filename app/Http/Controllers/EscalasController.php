@@ -10,13 +10,11 @@ use App\Models\Model_shifits;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class EscalasController extends Controller
 {
-    /**
-     * Exibe as escalas de todos os funcionários.
-     */
     public function index(): View
     {
         $departamentos = Model_departments::count();
@@ -24,7 +22,7 @@ class EscalasController extends Controller
         $funcionarios = Model_Employees::count();
         $cargos = Model_positions::count();
         $schedules = Model_schedules::with(['employee', 'shift'])->get();
-        return view('menus.escalas.index', compact('schedules','turnos','funcionarios','cargos','departamentos'));
+        return view('menus.escalas.index', compact('schedules', 'turnos', 'funcionarios', 'cargos', 'departamentos'));
     }
 
     public function getData(Request $request): Object
@@ -42,9 +40,7 @@ class EscalasController extends Controller
 
             // Verifica se o valor de pesquisa é uma data válida
 
-            $query = Model_schedules::obterEscalas($search);
-
-
+            $query = Model_schedules::obterEscalas();
 
             // Contagem total de registros
             $totalData = $query->count();
@@ -58,12 +54,13 @@ class EscalasController extends Controller
 
             // Define as colunas disponíveis para ordenação
             $columns = [
-                'nome',
-                'departamento',
+                'funcionario',
+                'turno',
+                'primeiro_dia',
+                'ultimo_dia',
                 'contato',
-                'descricao',
-                'cargo',
-                'responsabilidade',
+                'departamento',
+                'cargo'
             ];
 
             // Ordenação dos dados
@@ -77,25 +74,14 @@ class EscalasController extends Controller
             // Executa a consulta para obter dados paginados
             $data = $query->get()->map(function ($dado) {
                 return [
-                    'nome' => $dado->nome,
-                    'departamento' => $dado->departamento,
+                    'funcionario' => $dado->funcionario,
+                    'turno' => $dado->turno,
+                    'primeiro_dia' => Carbon::parse($dado->primeiro_dia)->format('d/m/Y'),
+                    'ultimo_dia' => Carbon::parse($dado->ultimo_dia)->format('d/m/Y'),
+                    'data-detalhes' => json_decode($dado->dias, true), // Certifique-se de que está convertendo corretamente
                     'contato' => $dado->contato,
-                    'descricao' => $dado->descricao,
-                    'cargo' => $dado->cargo,
-                    'responsabilidade' => $dado->responsabilidade,
-                    'acoes' => '
-                        <a href="' . route('funcionarios.edit', $dado->id) . '" class="text-blue-500 hover:text-blue-700" title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form action="' . route('funcionarios.destroy', $dado->id) . '" method="POST" style="display: inline;">
-                            ' . csrf_field() . '
-                            ' . method_field('DELETE') . '
-                            <button type="submit" class="text-red-500 hover:text-red-700" onclick="return confirm(\'Tem certeza que deseja excluir?\')" title="Excluir">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    ',
-
+                    'departamento' => $dado->departamento,
+                    'cargo' => $dado->cargo
                 ];
             });
 
@@ -116,6 +102,7 @@ class EscalasController extends Controller
             'data' => $data->toArray(),
         ]);
     }
+
     public function generate(Request $request)
     {
         $request->validate([
@@ -214,5 +201,21 @@ class EscalasController extends Controller
     {
         // Exemplo: Retorna o ID de um turno padrão, ajuste conforme necessário
         return Model_shifits::first()->id ?? 1;
+    }
+
+    public function delete()
+    {
+        try {
+            // Delete all scales
+            Model_schedules::query()->delete();
+
+            return response()->json([
+                'message' => 'Escalas apagadas com sucesso.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao apagar escalas: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

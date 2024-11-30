@@ -22,18 +22,23 @@ class Model_schedules extends Model
     {
         return $this->belongsTo(Model_Employees::class, 'employee_id');
     }
-    public function obterEscalas(): Builder
+    public static function obterEscalas(): Builder
     {
         return DB::table('schedules as a')->select([
-            'a.*',
-            'b.name as nome_turno',
-            'b.start_time as hora_inicio',
-            'b.end_time as hora_termino',
-            'c.name as funcionario'
+            'a.start_date as primeiro_dia',
+            'a.end_date as ultimo_dia',
+            'a.days as dias',
+            'b.name as funcionario',
+            'b.contact as contato',
+            'c.name as turno',
+            'd.name as departamento',
+            'e.name as cargo'
 
-        ])->leftJoin('shifits as b','b.id','=','shift_id')
-        ->leftJoin('employees as c','c.id','=','a.employee_id')
-        ->leftJoin('');
+
+        ])->leftJoin('employees as b','b.id','=','a.employee_id')
+        ->leftJoin('shifts as c','c.id','=','a.shift_id')
+        ->leftJoin('departments as d', 'd.id', '=', 'b.department_id')
+        ->leftJoin('positions as e', 'e.id', '=', 'b.position_id');
     }
     public function shift()
     {

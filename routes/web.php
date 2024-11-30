@@ -84,5 +84,7 @@ Route::middleware([
     // ESCALAS
         Route::get('/escalas', [EscalasController::class, 'index'])->name('escalas');
         Route::post('/escalas/generate', [EscalasController::class, 'generate'])->name('escalas.generate');
+        Route::get('/get-data-escalas', [EscalasController::class, 'getData'])->name('get-data-escalas');
+        Route::delete('/escalas/apagar', [EscalasController::class, 'delete'])->name('escalas.apagar');
 
 });
