@@ -158,28 +158,122 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('modalEscala');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const closeModalButtons = [
+                document.getElementById('fecharModal'),
+                document.getElementById('fecharModalRodape')
+            ];
+        
+            // Function to close modal
+            function closeModal() {
+                modal.classList.add('hidden');
+                // Re-enable scrolling on body
+                document.body.style.overflow = 'auto';
+            }
+        
+            // Close modal when close buttons are clicked
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', closeModal);
+            });
+        
+            // Close modal when clicking outside of the modal content
+            modalOverlay.addEventListener('click', function(event) {
+                if (event.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+        
+            // Prevent scroll propagation when scrolling inside the modal
+            const detalhesEscala = document.getElementById('detalhesEscala');
+            detalhesEscala.addEventListener('wheel', function(event) {
+                const isAtTop = this.scrollTop === 0;
+                const isAtBottom = this.scrollHeight - this.scrollTop === this.clientHeight;
+        
+                if ((isAtTop && event.deltaY < 0) || (isAtBottom && event.deltaY > 0)) {
+                    event.preventDefault();
+                }
+            });
+        
+            // Modify existing showModal function to prevent body scroll
+            window.showModal = function() {
+                modal.classList.remove('hidden');
+                // Disable scrolling on body
+                document.body.style.overflow = 'hidden';
+            }
+        });
+        </script>
+        
+    <script>
         function gerarEscalas() {
-            const periodType = document.getElementById('periodType').value;
-            const button = event.target;
-            button.disabled = true;
-            button.textContent = 'Gerando...';
+            // Show confirmation modal
+            Swal.fire({
+                title: 'Gerar Escalas',
+                text: "Você está prestes a gerar novas escalas. Deseja continuar?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, gerar escalas',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                // Adiciona log de depuração para confirmação
+                console.log('Resultado da confirmação de geração:', result);
 
-            // Enviar requisição para o backend
-            axios.post('/escalas/generate', {
-                    period_type: periodType
-                })
-                .then(response => {
-                    alert('Escalas geradas com sucesso!');
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error('Erro ao gerar escalas:', error);
-                    alert('Erro ao gerar escalas: ' + (error.response?.data?.error || error.message));
-                })
-                .finally(() => {
-                    button.disabled = false;
-                    button.textContent = 'Gerar Escalas';
-                });
+                if (result.isConfirmed) {
+                    const periodType = document.getElementById('periodType').value;
+                    const button = event.target;
+                    button.disabled = true;
+                    button.textContent = 'Gerando...';
+
+                    // Log para verificar dados sendo enviados
+                    console.log('Enviando requisição para gerar escalas', {
+                        periodType
+                    });
+
+                    // Enviar requisição para o backend
+                    axios.post('/escalas/generate', {
+                            period_type: periodType
+                        })
+                        .then(response => {
+                            console.log('Escalas geradas com sucesso:', response.data);
+
+                            // Tenta recarregar a DataTable
+                            try {
+                                $('.tableEscalas').DataTable().ajax.reload();
+                            } catch (e) {
+                                console.error('Erro ao recarregar DataTable:', e);
+                            }
+
+                            // Show success notification
+                            Swal.fire(
+                                'Escalas Geradas!',
+                                'As escalas foram geradas com sucesso.',
+                                'success'
+                            );
+                        })
+                        .catch(error => {
+                            // Log detalhado do erro
+                            console.error('Erro ao gerar escalas:', {
+                                error: error,
+                                response: error.response
+                            });
+
+                            // Show error notification
+                            Swal.fire(
+                                'Erro!',
+                                'Não foi possível gerar as escalas. ' +
+                                (error.response?.data?.error || error.message || 'Erro desconhecido.'),
+                                'error'
+                            );
+                        })
+                        .finally(() => {
+                            button.disabled = false;
+                            button.textContent = 'Gerar Escalas';
+                        });
+                }
+            });
         }
 
         function apagarEscalas() {
@@ -252,11 +346,6 @@
     </script>
     <script src="{{ asset('js/datatable.js') }}" defer></script>
     <script>
-        < script src = "{{ asset('js/datatable.js') }}"
-        defer >
-    </script>
-    <script src="{{ asset('js/datatable.js') }}" defer></script>
-    <script>
         document.addEventListener('DOMContentLoaded', function() {
             initializeDataTable(
                 "Não foram encontrados registros escalas.",
@@ -299,64 +388,182 @@
                     },
                     {
                         "data": null,
-                        "title": "Ações",
+                        "title": "Detalhes",
                         "className": "text-center",
+                        "orderable": false,
                         "render": function(data, type, row) {
                             return `<button class="btnDetalhes group flex items-center justify-center text-white hover:text-gray-300 focus:outline-none transition-colors bg-blue-600 px-2 py-1 rounded" data-detalhes='${JSON.stringify(row['data-detalhes'])}'>
-                                <span class="mr-1 text-sm">Detalhes</span>
-                                <svg class="w-4 h-4 text-white group-hover:text-gray-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </button>`;
+                                        <span class="mr-1 text-sm">Detalhes</span>
+                                        <svg class="w-4 h-4 text-white group-hover:text-gray-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </button>`;
                         }
+                    },
+                    {
+                        "data": null,
+                        "title": "Gerar Escala",
+                        "className": "text-center",
+                        "orderable": false,
+                        "render": function(data, type, row) {
+                            // Assuming the row has an 'id_funcionario' property
+                            return `<button onclick="gerarEscalaFuncionario(${row.id_funcionario})" class="btnGerarEscala group flex items-center justify-center text-white hover:text-gray-300 focus:outline-none transition-colors bg-green-600 px-2 py-1 rounded">
+                                        <span class="mr-1 text-sm">Gerar</span>
+                                        <svg class="w-4 h-4 text-white group-hover:text-gray-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                        </svg>
+                                    </button>`;
+                        }
+                    }
+                ], [{
+                        extend: 'pdfHtml5',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        titleAttr: 'PDF'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        titleAttr: 'Excel'
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        titleAttr: 'CSV'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fa fa-print"></i>',
+                        titleAttr: 'Imprimir'
+                    },
+                    {
+                        extend: 'copyHtml5',
+                        text: '<i class="fa fa-copy"></i>',
+                        titleAttr: 'Copiar'
+                    },
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fa fa-columns" aria-hidden="true"></i>',
+                        titleAttr: 'Colunas'
                     }
                 ]
             );
+        });
 
-            // Evento para abrir modal
-            document.querySelector('.tableEscalas').addEventListener('click', function(e) {
-                const btnDetalhes = e.target.closest('.btnDetalhes');
-                if (btnDetalhes) {
-                    // Parse dos detalhes
-                    const detalhes = JSON.parse(btnDetalhes.getAttribute('data-detalhes'));
-                    const container = document.getElementById('detalhesEscala');
-                    container.innerHTML = '';
+        // Add this function to handle generating schedule for a specific employee
+        function gerarEscalaFuncionario(idFuncionario) {
+            // Prompt to choose period type
+            Swal.fire({
+                title: 'Escolha o Tipo de Período',
+                input: 'select',
+                inputOptions: {
+                    'weekly': 'Semanal',
+                    'biweekly': 'Quinzenal',
+                    'monthly': 'Mensal',
+                    'quarterly': 'Trimestral'
+                },
+                inputPlaceholder: 'Selecione o período',
+                showCancelButton: true,
+                confirmButtonText: 'Gerar Escala',
+                cancelButtonText: 'Cancelar',
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value) {
+                            resolve();
+                        } else {
+                            resolve('Você precisa selecionar um tipo de período');
+                        }
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Confirm generation
+                    Swal.fire({
+                        title: 'Confirmar Geração de Escala',
+                        text: `Deseja gerar escala ${getPeriodTypeText(result.value)} para este funcionário?`,
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sim, gerar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((confirmResult) => {
+                        if (confirmResult.isConfirmed) {
+                            // Send AJAX request to generate schedule
+                            axios.post('{{ route('gerar-escala') }}', {
+                                    employee_id: idFuncionario,
+                                    period_type: result.value
+                                })
+                                .then(response => {
+                                    Swal.fire('Sucesso!', response.data.message, 'success');
+                                    // Optionally reload the table or update specific row
+                                })
+                                .catch(error => {
+                                    Swal.fire('Erro!', 'Não foi possível gerar a escala.', 'error');
+                                });
+                        }
+                    });
+                }
+            });
+        }
 
-                    // Verifica se detalhes é um array
-                    if (Array.isArray(detalhes)) {
-                        // Popula a modal com os dados do JSON
-                        detalhes.forEach(item => {
-                            const div = document.createElement('div');
-                            div.classList.add('mb-2', 'p-3', 'bg-gray-100', 'rounded-lg');
+        // Helper function to get readable period type text
+        function getPeriodTypeText(periodType) {
+            switch (periodType) {
+                case 'weekly':
+                    return 'semanal';
+                case 'biweekly':
+                    return 'quinzenal';
+                case 'monthly':
+                    return 'mensal';
+                case 'quarterly':
+                    return 'trimestral';
+                default:
+                    return 'do período';
+            }
+        }
 
-                            // Função para formatar data no padrão brasileiro (DD/MM/AAAA)
-                            const formatarData = (dateString) => {
-                                if (!dateString) return 'Não informado';
-                                const data = new Date(dateString);
-                                return data instanceof Date && !isNaN(data) ?
-                                    data.toLocaleDateString('pt-BR') :
-                                    'Data inválida';
-                            };
+        // Evento para abrir modal
+        document.querySelector('.tableEscalas').addEventListener('click', function(e) {
+            const btnDetalhes = e.target.closest('.btnDetalhes');
+            if (btnDetalhes) {
+                // Parse dos detalhes
+                const detalhes = JSON.parse(btnDetalhes.getAttribute('data-detalhes'));
+                const container = document.getElementById('detalhesEscala');
+                container.innerHTML = '';
 
-                            // Função para formatar hora no padrão brasileiro (HH:mm)
-                            const formatarHora = (hoursString) => {
-                                if (!hoursString) return 'Não informado';
+                // Verifica se detalhes é um array
+                if (Array.isArray(detalhes)) {
+                    // Popula a modal com os dados do JSON
+                    detalhes.forEach(item => {
+                        const div = document.createElement('div');
+                        div.classList.add('mb-2', 'p-3', 'bg-gray-100', 'rounded-lg');
 
-                                // Se já estiver no formato HH:mm, retorna como está
-                                if (/^\d{2}:\d{2}$/.test(hoursString)) return hoursString;
+                        // Função para formatar data no padrão brasileiro (DD/MM/AAAA)
+                        const formatarData = (dateString) => {
+                            if (!dateString) return 'Não informado';
+                            const data = new Date(dateString);
+                            return data instanceof Date && !isNaN(data) ?
+                                data.toLocaleDateString('pt-BR') :
+                                'Data inválida';
+                        };
 
-                                // Se for um número de horas decimal (ex: 1.5)
-                                const horasDecimal = parseFloat(hoursString);
-                                if (!isNaN(horasDecimal)) {
-                                    const horas = Math.floor(horasDecimal);
-                                    const minutos = Math.round((horasDecimal - horas) * 60);
-                                    return `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
-                                }
+                        // Função para formatar hora no padrão brasileiro (HH:mm)
+                        const formatarHora = (hoursString) => {
+                            if (!hoursString) return 'Não informado';
 
-                                return 'Hora inválida';
-                            };
+                            // Se já estiver no formato HH:mm, retorna como está
+                            if (/^\d{2}:\d{2}$/.test(hoursString)) return hoursString;
 
-                            div.innerHTML = `
+                            // Se for um número de horas decimal (ex: 1.5)
+                            const horasDecimal = parseFloat(hoursString);
+                            if (!isNaN(horasDecimal)) {
+                                const horas = Math.floor(horasDecimal);
+                                const minutos = Math.round((horasDecimal - horas) * 60);
+                                return `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
+                            }
+
+                            return 'Hora inválida';
+                        };
+
+                        div.innerHTML = `
                                 <div class="flex justify-between">
                                     <span class="font-medium text-gray-800">
                                         <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -376,26 +583,25 @@
                                     <span class="text-gray-600">${formatarHora(item.hours)}</span>
                                 </div>
                             `;
-                            container.appendChild(div);
-                        });
-                    } else {
-                        container.innerHTML =
-                            '<p class="text-gray-500 text-center">Nenhum detalhe disponível</p>';
-                    }
-
-                    // Exibe a modal
-                    document.getElementById('modalEscala').classList.remove('hidden');
+                        container.appendChild(div);
+                    });
+                } else {
+                    container.innerHTML =
+                        '<p class="text-gray-500 text-center">Nenhum detalhe disponível</p>';
                 }
-            });
 
-            // Adiciona event listeners para fechar a modal
-            document.getElementById('fecharModal').addEventListener('click', () => {
-                document.getElementById('modalEscala').classList.add('hidden');
-            });
+                // Exibe a modal
+                document.getElementById('modalEscala').classList.remove('hidden');
+            }
+        });
 
-            document.getElementById('fecharModalRodape').addEventListener('click', () => {
-                document.getElementById('modalEscala').classList.add('hidden');
-            });
+        // Adiciona event listeners para fechar a modal
+        document.getElementById('fecharModal').addEventListener('click', () => {
+            document.getElementById('modalEscala').classList.add('hidden');
+        });
+
+        document.getElementById('fecharModalRodape').addEventListener('click', () => {
+            document.getElementById('modalEscala').classList.add('hidden');
         });
     </script>
 

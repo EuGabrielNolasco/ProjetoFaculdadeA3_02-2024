@@ -30,9 +30,9 @@
                     <x-nav-link href="{{ route('escalas') }}" :active="request()->routeIs('escalas')">
                         {{ __('Escalas') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('relatorios') }}" :active="request()->routeIs('relatorios')">
+                    {{-- <x-nav-link href="{{ route('relatorios') }}" :active="request()->routeIs('relatorios')">
                         {{ __('Relatórios') }}
-                    </x-nav-link>
+                    </x-nav-link> --}}
 
                 </div>
             </div>
@@ -193,9 +193,9 @@
                 {{ __('Escalas') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="{{ route('relatorios') }}" :active="request()->routeIs('relatorios')">
+            {{-- <x-responsive-nav-link href="{{ route('relatorios') }}" :active="request()->routeIs('relatorios')">
                 {{ __('Relatórios') }}
-            </x-responsive-nav-link>
+            </x-responsive-nav-link> --}}
 
         </div>
 

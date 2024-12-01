@@ -40,7 +40,7 @@ class EscalasController extends Controller
 
             // Verifica se o valor de pesquisa é uma data válida
 
-            $query = Model_schedules::obterEscalas();
+            $query = Model_schedules::obterEscalas($search);
 
             // Contagem total de registros
             $totalData = $query->count();
@@ -60,7 +60,8 @@ class EscalasController extends Controller
                 'ultimo_dia',
                 'contato',
                 'departamento',
-                'cargo'
+                'cargo',
+                'id_funcionario'
             ];
 
             // Ordenação dos dados
@@ -81,7 +82,8 @@ class EscalasController extends Controller
                     'data-detalhes' => json_decode($dado->dias, true), // Certifique-se de que está convertendo corretamente
                     'contato' => $dado->contato,
                     'departamento' => $dado->departamento,
-                    'cargo' => $dado->cargo
+                    'cargo' => $dado->cargo,
+                    'id_funcionario' => $dado->id_funcionario
                 ];
             });
 
@@ -217,5 +219,82 @@ class EscalasController extends Controller
                 'message' => 'Erro ao apagar escalas: ' . $e->getMessage()
             ], 500);
         }
+    }
+    public function generateForSingleEmployee(Request $request)
+    {
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'period_type' => 'required|in:weekly,biweekly,monthly,quarterly',
+        ]);
+
+        $periodType = $request->period_type;
+        $employeeId = $request->employee_id;
+
+        $days = match ($periodType) {
+            'weekly' => 7,
+            'biweekly' => 14,
+            'monthly' => 30,
+            'quarterly' => 90,
+            default => throw new \InvalidArgumentException("Tipo de período inválido."),
+        };
+
+        $startDate = Carbon::now();
+        $holidays = $this->getHolidays(); // Suposição de função para obter feriados
+
+        // Busca o funcionário específico
+        $employee = Model_Employees::findOrFail($employeeId);
+
+        // Tenta buscar uma escala existente para o funcionário
+        $existingSchedule = Model_schedules::where('employee_id', $employee->id)
+            ->orderBy('end_date', 'desc')
+            ->first();
+
+        if ($existingSchedule) {
+            // Inicia a partir do dia seguinte ao último dia da escala existente
+            $currentDate = Carbon::parse($existingSchedule->end_date)->addDay();
+            $scheduledDays = json_decode($existingSchedule->days, true);
+        } else {
+            // Se não existir uma escala anterior, inicia a partir da data atual
+            $currentDate = $startDate->copy();
+            $scheduledDays = [];
+        }
+
+        $daysScheduled = 0;
+
+        while ($daysScheduled < $days) {
+            // Verifica se é fim de semana ou feriado
+            if (!$this->isWeekendOrHoliday($currentDate, $holidays)) {
+                // Adiciona o dia à escala do funcionário com 8 horas de trabalho
+                $scheduledDays[] = [
+                    'date' => $currentDate->toDateString(),
+                    'hours' => 8,
+                ];
+                $daysScheduled++;
+            }
+
+            // Avança para o próximo dia
+            $currentDate->addDay();
+        }
+
+        // Atualiza ou cria a escala para o funcionário
+        if ($existingSchedule) {
+            // Atualiza o campo `days` e a `end_date` na escala existente
+            $existingSchedule->update([
+                'days' => json_encode($scheduledDays),
+                'end_date' => $currentDate->subDay()->toDateString(), // Ajusta para o último dia da escala
+            ]);
+        } else {
+            // Cria uma nova escala para o funcionário
+            Model_schedules::create([
+                'employee_id' => $employee->id,
+                'shift_id' => $this->getDefaultShiftId(), // Ajuste para seu turno padrão
+                'period_type' => $periodType,
+                'start_date' => $startDate->toDateString(),
+                'end_date' => $currentDate->subDay()->toDateString(),
+                'days' => json_encode($scheduledDays),
+            ]);
+        }
+
+        return response()->json(['message' => 'Escala gerada com sucesso para o funcionário!'], 201);
     }
 }
