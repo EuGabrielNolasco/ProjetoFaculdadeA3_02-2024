@@ -126,39 +126,49 @@
                         <h3 class="text-xl font-bold text-gray-900 border-b pb-3 border-gray-200 dark:border-gray-700">
                             Relatórios Rápidos</h3>
                         <div class="space-y-3">
-                            <button
-                                class="w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 group">
-                                <span
-                                    class="text-gray-700-300 group-hover:text-gray-900 dark:group-hover:text-white">Análise
-                                    de Departamento</span>
-                                <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-white"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                            <button
-                                class="w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 group">
-                                <span
-                                    class="text-gray-700-300 group-hover:text-gray-900 dark:group-hover:text-white">Análise
-                                    de Cargos</span>
-                                <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-white"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                            <button
-                                class="w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 group">
-                                <span
-                                    class="text-gray-700-300 group-hover:text-gray-900 dark:group-hover:text-white">Análise
-                                    de Turnos</span>
-                                <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-white"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
+                            <a href="{{ route('pdf-departamento') }}" target="_blank">
+                                <button
+                                    class="w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 group">
+                                    <span
+                                        class="text-gray-700-300 group-hover:text-gray-900 dark:group-hover:text-white">Análise
+                                        de Departamento</span>
+                                    <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-white"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </a>
+                            <a href="{{ route('pdf-cargo') }}" target="_blank">
+
+                                <button
+                                    class="w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 group">
+                                    <span
+                                        class="text-gray-700-300 group-hover:text-gray-900 dark:group-hover:text-white">Análise
+                                        de Cargos</span>
+                                    <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-white"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </a>
+
+                            <a href="{{ route('pdf-turno') }}" target="_blank">
+
+                                <button
+                                    class="w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 group">
+                                    <span
+                                        class="text-gray-700-300 group-hover:text-gray-900 dark:group-hover:text-white">Análise
+                                        de Turnos</span>
+                                    <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-white"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </a>
+
                         </div>
                     </div>
                 </div>
@@ -324,6 +334,21 @@
                     },
                     {
                         "data": null,
+                        "title": "Relatório",
+                        "className": "text-center",
+                        "orderable": false,
+                        "render": function(data, type, row) {
+                            // Assuming the row has an 'id_funcionario' property
+                            return `<button onclick="pdfEscala(${row.id_funcionario})" class="btnGerarEscala group flex items-center justify-center text-blue-600 hover:text-blue-800 focus:outline-none transition-colors bg-blue-100 px-2 py-1 rounded">
+                                        <span class="mr-1 text-sm">Relatório</span>
+                                        <svg class="w-4 h-4 text-blue-600 group-hover:text-blue-800 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                        </svg>
+                                    </button>`;
+                        }
+                    },
+                    {
+                        "data": null,
                         "title": "Ações",
                         "className": "text-center",
                         "orderable": false,
@@ -454,6 +479,13 @@
                 document.getElementById('modalEscala').classList.add('hidden');
             });
         });
+
+
+        function pdfEscala(idFuncionario) {
+            // Define a URL da rota que irá gerar o PDF
+            const url = `/gerar-pdf-escalas/${idFuncionario}`; // Altere para a rota que você deseja
+            window.location.href = url; // Redireciona para a URL
+        }
     </script>
 
 

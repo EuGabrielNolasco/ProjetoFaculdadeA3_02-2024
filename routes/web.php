@@ -14,10 +14,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [InicioController::class, 'index']);
 Route::get('/get-data-escalas', [EscalasController::class, 'getData'])->name('get-data-escalas');
 
-
 //PDF
-Route::get('/pdf', [PdfController::class, 'index'])->name('pdf');
-
+Route::get('/pdf-departamento', [PdfController::class, 'departamento'])->name('pdf-departamento');
+Route::get('/pdf-cargo', [PdfController::class, 'cargo'])->name('pdf-cargo');
+Route::get('/pdf-turno', [PdfController::class, 'turno'])->name('pdf-turno');
+Route::get('/gerar-pdf-escalas/{id_funcionario}', [PdfController::class, 'gerarPdf'])->name('gerar.pdf.escalas');
 
 
 Route::middleware([
