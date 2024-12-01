@@ -165,37 +165,37 @@
                 document.getElementById('fecharModal'),
                 document.getElementById('fecharModalRodape')
             ];
-
+        
             // Function to close modal
             function closeModal() {
                 modal.classList.add('hidden');
                 // Re-enable scrolling on body
                 document.body.style.overflow = 'auto';
             }
-
+        
             // Close modal when close buttons are clicked
             closeModalButtons.forEach(button => {
                 button.addEventListener('click', closeModal);
             });
-
+        
             // Close modal when clicking outside of the modal content
             modalOverlay.addEventListener('click', function(event) {
                 if (event.target === modalOverlay) {
                     closeModal();
                 }
             });
-
+        
             // Prevent scroll propagation when scrolling inside the modal
             const detalhesEscala = document.getElementById('detalhesEscala');
             detalhesEscala.addEventListener('wheel', function(event) {
                 const isAtTop = this.scrollTop === 0;
                 const isAtBottom = this.scrollHeight - this.scrollTop === this.clientHeight;
-
+        
                 if ((isAtTop && event.deltaY < 0) || (isAtBottom && event.deltaY > 0)) {
                     event.preventDefault();
                 }
             });
-
+        
             // Modify existing showModal function to prevent body scroll
             window.showModal = function() {
                 modal.classList.remove('hidden');
@@ -203,8 +203,8 @@
                 document.body.style.overflow = 'hidden';
             }
         });
-    </script>
-
+        </script>
+        
     <script>
         function gerarEscalas() {
             // Show confirmation modal
@@ -396,6 +396,21 @@
                                         <span class="mr-1 text-sm">Detalhes</span>
                                         <svg class="w-4 h-4 text-white group-hover:text-gray-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </button>`;
+                        }
+                    },
+                    {
+                        "data": null,
+                        "title": "Gerar Escala",
+                        "className": "text-center",
+                        "orderable": false,
+                        "render": function(data, type, row) {
+                            // Assuming the row has an 'id_funcionario' property
+                            return `<button onclick="gerarEscalaFuncionario(${row.id_funcionario})" class="btnGerarEscala group flex items-center justify-center text-white hover:text-gray-300 focus:outline-none transition-colors bg-green-600 px-2 py-1 rounded">
+                                        <span class="mr-1 text-sm">Gerar</span>
+                                        <svg class="w-4 h-4 text-white group-hover:text-gray-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                                         </svg>
                                     </button>`;
                         }
