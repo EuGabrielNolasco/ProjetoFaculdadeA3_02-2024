@@ -165,37 +165,37 @@
                 document.getElementById('fecharModal'),
                 document.getElementById('fecharModalRodape')
             ];
-        
+
             // Function to close modal
             function closeModal() {
                 modal.classList.add('hidden');
                 // Re-enable scrolling on body
                 document.body.style.overflow = 'auto';
             }
-        
+
             // Close modal when close buttons are clicked
             closeModalButtons.forEach(button => {
                 button.addEventListener('click', closeModal);
             });
-        
+
             // Close modal when clicking outside of the modal content
             modalOverlay.addEventListener('click', function(event) {
                 if (event.target === modalOverlay) {
                     closeModal();
                 }
             });
-        
+
             // Prevent scroll propagation when scrolling inside the modal
             const detalhesEscala = document.getElementById('detalhesEscala');
             detalhesEscala.addEventListener('wheel', function(event) {
                 const isAtTop = this.scrollTop === 0;
                 const isAtBottom = this.scrollHeight - this.scrollTop === this.clientHeight;
-        
+
                 if ((isAtTop && event.deltaY < 0) || (isAtBottom && event.deltaY > 0)) {
                     event.preventDefault();
                 }
             });
-        
+
             // Modify existing showModal function to prevent body scroll
             window.showModal = function() {
                 modal.classList.remove('hidden');
@@ -203,8 +203,8 @@
                 document.body.style.overflow = 'hidden';
             }
         });
-        </script>
-        
+    </script>
+
     <script>
         function gerarEscalas() {
             // Show confirmation modal
@@ -564,25 +564,43 @@
                         };
 
                         div.innerHTML = `
-                                <div class="flex justify-between">
-                                    <span class="font-medium text-gray-800">
-                                        <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        Data:
-                                    </span>
-                                    <span class="text-gray-600">${formatarData(item.date)}</span>
-                                </div>
-                                <div class="flex justify-between mt-1">
-                                    <span class="font-medium text-gray-800">
-                                        <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-lienjoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Horas:
-                                    </span>
-                                    <span class="text-gray-600">${formatarHora(item.hours)}</span>
-                                </div>
-                            `;
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-800">
+                            <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Data:
+                        </span>
+                        <span class="text-gray-600">${formatarData(item.date)}</span>
+                    </div>
+                    <div class="flex justify-between mt-1">
+                        <span class="font-medium text-gray-800">
+                            <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Turno:
+                        </span>
+                        <span class="text-gray-600">${item.shift_name || 'Não informado'}</span>
+                    </div>
+                    <div class="flex justify-between mt-1">
+                        <span class="font-medium text-gray-800">
+                            <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Hora Entrada:
+                        </span>
+                        <span class="text-gray-600">${formatarHora(item.start_time)}</span>
+                    </div>
+                    <div class="flex justify-between mt-1">
+                        <span class="font-medium text-gray-800">
+                            <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Hora Saida:
+                        </span>
+                        <span class="text-gray-600">${formatarHora(item.end_time)}</span>
+                    </div>
+                `;
                         container.appendChild(div);
                     });
                 } else {
@@ -594,7 +612,6 @@
                 document.getElementById('modalEscala').classList.remove('hidden');
             }
         });
-
         // Adiciona event listeners para fechar a modal
         document.getElementById('fecharModal').addEventListener('click', () => {
             document.getElementById('modalEscala').classList.add('hidden');

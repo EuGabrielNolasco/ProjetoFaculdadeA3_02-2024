@@ -439,25 +439,43 @@
                             };
 
                             div.innerHTML = `
-                                <div class="flex justify-between">
-                                    <span class="font-medium text-gray-800">
-                                        <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        Data:
-                                    </span>
-                                    <span class="text-gray-600">${formatarData(item.date)}</span>
-                                </div>
-                                <div class="flex justify-between mt-1">
-                                    <span class="font-medium text-gray-800">
-                                        <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-lienjoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Horas:
-                                    </span>
-                                    <span class="text-gray-600">${formatarHora(item.hours)}</span>
-                                </div>
-                            `;
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-800">
+                            <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Data:
+                        </span>
+                        <span class="text-gray-600">${formatarData(item.date)}</span>
+                    </div>
+                    <div class="flex justify-between mt-1">
+                        <span class="font-medium text-gray-800">
+                            <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Turno:
+                        </span>
+                        <span class="text-gray-600">${item.shift_name || 'Não informado'}</span>
+                    </div>
+                    <div class="flex justify-between mt-1">
+                        <span class="font-medium text-gray-800">
+                            <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Hora Entrada:
+                        </span>
+                        <span class="text-gray-600">${formatarHora(item.start_time)}</span>
+                    </div>
+                    <div class="flex justify-between mt-1">
+                        <span class="font-medium text-gray-800">
+                            <svg class="w-4 h-4 inline-block mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Hora Saida:
+                        </span>
+                        <span class="text-gray-600">${formatarHora(item.end_time)}</span>
+                    </div>
+                `;
                             container.appendChild(div);
                         });
                     } else {
@@ -469,7 +487,6 @@
                     document.getElementById('modalEscala').classList.remove('hidden');
                 }
             });
-
             // Adiciona event listeners para fechar a modal
             document.getElementById('fecharModal').addEventListener('click', () => {
                 document.getElementById('modalEscala').classList.add('hidden');
